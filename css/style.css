@@ -146,6 +146,23 @@ button:active {
   cursor: pointer;
   transition: all 0.2s;
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.option-btn .label {
+  background: #667eea;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .option-btn:hover:not(:disabled) {

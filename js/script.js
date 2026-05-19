@@ -110,7 +110,7 @@ function timeExpired() {
   const correct = questions[currentIndex].answer;
   allOptions.forEach(btn => {
     btn.disabled = true;
-    if (btn.textContent === correct) btn.classList.add("correct");
+    if (btn.textContent.includes(correct)) btn.classList.add("correct");
   });
   setTimeout(() => {
     currentIndex++;
@@ -133,10 +133,12 @@ function loadQuestion() {
   clearTimer();
   startTimer();
 
-  q.options.forEach(option => {
+  const labels = ["A", "B", "C", "D"];
+
+  q.options.forEach((option, i) => {
     const btn = document.createElement("button");
-    btn.className   = "option-btn";
-    btn.textContent = option;
+    btn.className = "option-btn";
+    btn.innerHTML = `<span class="label">${labels[i]}</span> ${option}`;
     btn.addEventListener("click", () => selectAnswer(btn, option, q.answer));
     optionsContainer.appendChild(btn);
   });
@@ -148,7 +150,7 @@ function selectAnswer(selected, chosen, correct) {
 
   allOptions.forEach(btn => {
     btn.disabled = true;
-    if (btn.textContent === correct) btn.classList.add("correct");
+    if (btn.textContent.includes(correct)) btn.classList.add("correct");
   });
 
   if (chosen === correct) {
