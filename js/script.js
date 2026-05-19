@@ -54,6 +54,7 @@ const questions = [
 // State
 let currentIndex = 0;
 let score = 0;
+let timerInterval = null;
 
 // Elements
 const startScreen      = document.getElementById("start-screen");
@@ -65,6 +66,8 @@ const questionNumber   = document.getElementById("question-number");
 const scoreDisplay     = document.getElementById("score-display");
 const progressFill     = document.getElementById("progress-fill");
 const nextBtn          = document.getElementById("next-btn");
+const timerEl          = document.getElementById("timer");
+const timerCount       = document.getElementById("timer-count");
 const resultEmoji      = document.getElementById("result-emoji");
 const resultTitle      = document.getElementById("result-title");
 const resultScore      = document.getElementById("result-score");
@@ -74,6 +77,46 @@ const resultMessage    = document.getElementById("result-message");
 function showScreen(screen) {
   [startScreen, quizScreen, resultScreen].forEach(s => s.classList.add("hidden"));
   screen.classList.remove("hidden");
+}
+
+// Timer
+function startTimer() {
+  let timeLeft = 60;
+  timerCount.textContent = timeLeft;
+  timerEl.classList.remove("timer-low");
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerCount.textContent = timeLeft;
+
+    if (timeLeft <= 10) timerEl.classList.add("timer-low");
+
+    if (timeLeft <= 0) {
+      clearTimer();
+      timeExpired();
+    }
+  }, 1000);
+}
+
+function clearTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  timerEl.classList.remove("timer-low");
+}
+
+function timeExpired() {
+  // Reveal correct answer and auto-advance after 1.5s
+  const allOptions = optionsContainer.querySelectorAll(".option-btn");
+  const correct = questions[currentIndex].answer;
+  allOptions.forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) btn.classList.add("correct");
+  });
+  setTimeout(() => {
+    currentIndex++;
+    if (currentIndex < questions.length) loadQuestion();
+    else showResult();
+  }, 1500);
 }
 
 // Load current question
@@ -87,6 +130,8 @@ function loadQuestion() {
 
   optionsContainer.innerHTML = "";
   nextBtn.classList.add("hidden");
+  clearTimer();
+  startTimer();
 
   q.options.forEach(option => {
     const btn = document.createElement("button");
@@ -113,6 +158,7 @@ function selectAnswer(selected, chosen, correct) {
     selected.classList.add("wrong");
   }
 
+  clearTimer();
   nextBtn.classList.remove("hidden");
 }
 
@@ -148,6 +194,7 @@ function showResult() {
 function restartQuiz() {
   currentIndex = 0;
   score        = 0;
+  clearTimer();
   showScreen(quizScreen);
   loadQuestion();
 }

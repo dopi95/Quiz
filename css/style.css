@@ -81,6 +81,26 @@ button:active {
   margin-bottom: 10px;
 }
 
+/* Timer */
+#timer {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 14px;
+  transition: color 0.3s;
+}
+
+#timer.timer-low {
+  color: #dc3545;
+  animation: pulse 0.6s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to   { transform: scale(1.15); }
+}
+
 /* Progress Bar */
 .progress-bar {
   background: #eee;
