@@ -50,3 +50,28 @@ const questions = [
     answer: "CSS",
   },
 ];
+
+// State
+let currentIndex = 0;
+let score = 0;
+
+// Elements
+const startScreen      = document.getElementById("start-screen");
+const quizScreen       = document.getElementById("quiz-screen");
+const resultScreen     = document.getElementById("result-screen");
+const questionText     = document.getElementById("question-text");
+const optionsContainer = document.getElementById("options-container");
+const questionNumber   = document.getElementById("question-number");
+const scoreDisplay     = document.getElementById("score-display");
+const progressFill     = document.getElementById("progress-fill");
+const nextBtn          = document.getElementById("next-btn");
+const resultEmoji      = document.getElementById("result-emoji");
+const resultTitle      = document.getElementById("result-title");
+const resultScore      = document.getElementById("result-score");
+const resultMessage    = document.getElementById("result-message");
+
+// Show a screen, hide others
+function showScreen(screen) {
+  [startScreen, quizScreen, resultScreen].forEach(s => s.classList.add("hidden"));
+  screen.classList.remove("hidden");
+}
