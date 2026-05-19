@@ -115,3 +115,39 @@ function selectAnswer(selected, chosen, correct) {
 
   nextBtn.classList.remove("hidden");
 }
+
+// Show result screen
+function showResult() {
+  showScreen(resultScreen);
+
+  const total = questions.length;
+  const pct   = (score / total) * 100;
+
+  resultScore.textContent = `You scored ${score} out of ${total}`;
+
+  if (pct === 100) {
+    resultEmoji.textContent   = "🏆";
+    resultTitle.textContent   = "Perfect Score!";
+    resultMessage.textContent = "Outstanding! You got every question right!";
+  } else if (pct >= 70) {
+    resultEmoji.textContent   = "🎉";
+    resultTitle.textContent   = "Great Job!";
+    resultMessage.textContent = "You did really well. Keep it up!";
+  } else if (pct >= 40) {
+    resultEmoji.textContent   = "😊";
+    resultTitle.textContent   = "Not Bad!";
+    resultMessage.textContent = "Good effort! A little more practice and you'll ace it.";
+  } else {
+    resultEmoji.textContent   = "📚";
+    resultTitle.textContent   = "Keep Studying!";
+    resultMessage.textContent = "Don't give up — try again and improve your score!";
+  }
+}
+
+// Reset and restart
+function restartQuiz() {
+  currentIndex = 0;
+  score        = 0;
+  showScreen(quizScreen);
+  loadQuestion();
+}
