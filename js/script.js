@@ -215,3 +215,10 @@ nextBtn.addEventListener("click", () => {
 });
 
 document.getElementById("restart-btn").addEventListener("click", restartQuiz);
+
+document.getElementById("exit-btn").addEventListener("click", () => {
+  currentIndex = 0;
+  score        = 0;
+  clearTimer();
+  showScreen(startScreen);
+});

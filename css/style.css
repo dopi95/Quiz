@@ -200,3 +200,21 @@ button:active {
   font-size: 0.95rem;
   margin-bottom: 28px;
 }
+
+/* Result Buttons */
+.result-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+#exit-btn {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+#exit-btn:hover {
+  background: #667eea;
+  color: #fff;
+}
