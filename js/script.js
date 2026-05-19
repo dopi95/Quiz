@@ -167,19 +167,18 @@ function showResult() {
   showScreen(resultScreen);
 
   const total = questions.length;
-  const pct   = (score / total) * 100;
 
   resultScore.textContent = `You scored ${score} out of ${total}`;
 
-  if (pct === 100) {
+  if (score >= 9) {
     resultEmoji.textContent   = "🏆";
     resultTitle.textContent   = "Perfect Score!";
     resultMessage.textContent = "Outstanding! You got every question right!";
-  } else if (pct >= 70) {
+  } else if (score >= 7) {
     resultEmoji.textContent   = "🎉";
     resultTitle.textContent   = "Great Job!";
     resultMessage.textContent = "You did really well. Keep it up!";
-  } else if (pct >= 40) {
+  } else if (score >= 5) {
     resultEmoji.textContent   = "😊";
     resultTitle.textContent   = "Not Bad!";
     resultMessage.textContent = "Good effort! A little more practice and you'll ace it.";
