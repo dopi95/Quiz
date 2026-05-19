@@ -75,3 +75,43 @@ function showScreen(screen) {
   [startScreen, quizScreen, resultScreen].forEach(s => s.classList.add("hidden"));
   screen.classList.remove("hidden");
 }
+
+// Load current question
+function loadQuestion() {
+  const q = questions[currentIndex];
+
+  questionNumber.textContent = `Question ${currentIndex + 1} / ${questions.length}`;
+  scoreDisplay.textContent   = `Score: ${score}`;
+  progressFill.style.width   = `${((currentIndex + 1) / questions.length) * 100}%`;
+  questionText.textContent   = q.question;
+
+  optionsContainer.innerHTML = "";
+  nextBtn.classList.add("hidden");
+
+  q.options.forEach(option => {
+    const btn = document.createElement("button");
+    btn.className   = "option-btn";
+    btn.textContent = option;
+    btn.addEventListener("click", () => selectAnswer(btn, option, q.answer));
+    optionsContainer.appendChild(btn);
+  });
+}
+
+// Handle answer selection
+function selectAnswer(selected, chosen, correct) {
+  const allOptions = optionsContainer.querySelectorAll(".option-btn");
+
+  allOptions.forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === correct) btn.classList.add("correct");
+  });
+
+  if (chosen === correct) {
+    score++;
+    scoreDisplay.textContent = `Score: ${score}`;
+  } else {
+    selected.classList.add("wrong");
+  }
+
+  nextBtn.classList.remove("hidden");
+}
