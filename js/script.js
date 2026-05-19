@@ -151,3 +151,20 @@ function restartQuiz() {
   showScreen(quizScreen);
   loadQuestion();
 }
+
+// Event Listeners
+document.getElementById("start-btn").addEventListener("click", () => {
+  showScreen(quizScreen);
+  loadQuestion();
+});
+
+nextBtn.addEventListener("click", () => {
+  currentIndex++;
+  if (currentIndex < questions.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+});
+
+document.getElementById("restart-btn").addEventListener("click", restartQuiz);
