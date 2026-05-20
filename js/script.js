@@ -1,225 +1,144 @@
 const questions = [
-  {
-    question: "What is the capital of France?",
-    options: ["Berlin", "Madrid", "Paris", "Rome"],
-    answer: "Paris",
-  },
-  {
-    question: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Mars", "Jupiter", "Saturn"],
-    answer: "Mars",
-  },
-  {
-    question: "What is 12 × 12?",
-    options: ["124", "144", "132", "156"],
-    answer: "144",
-  },
-  {
-    question: "Who wrote 'Romeo and Juliet'?",
-    options: ["Charles Dickens", "Mark Twain", "William Shakespeare", "Homer"],
-    answer: "William Shakespeare",
-  },
-  {
-    question: "What is the largest ocean on Earth?",
-    options: ["Atlantic", "Indian", "Arctic", "Pacific"],
-    answer: "Pacific",
-  },
-  {
-    question: "Which element has the chemical symbol 'O'?",
-    options: ["Gold", "Oxygen", "Osmium", "Oganesson"],
-    answer: "Oxygen",
-  },
-  {
-    question: "How many sides does a hexagon have?",
-    options: ["5", "6", "7", "8"],
-    answer: "6",
-  },
-  {
-    question: "What is the fastest land animal?",
-    options: ["Lion", "Horse", "Cheetah", "Leopard"],
-    answer: "Cheetah",
-  },
-  {
-    question: "In which year did World War II end?",
-    options: ["1943", "1944", "1945", "1946"],
-    answer: "1945",
-  },
-  {
-    question: "What language is primarily used for web styling?",
-    options: ["HTML", "JavaScript", "Python", "CSS"],
-    answer: "CSS",
-  },
+  { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
+  { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Saturn"], answer: "Mars" },
+  { question: "What is 12 × 12?", options: ["124", "144", "132", "156"], answer: "144" },
+  { question: "Who wrote 'Romeo and Juliet'?", options: ["Charles Dickens", "Mark Twain", "William Shakespeare", "Homer"], answer: "William Shakespeare" },
+  { question: "What is the largest ocean on Earth?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], answer: "Pacific" },
+  { question: "Which element has the chemical symbol 'O'?", options: ["Gold", "Oxygen", "Osmium", "Oganesson"], answer: "Oxygen" },
+  { question: "How many sides does a hexagon have?", options: ["5", "6", "7", "8"], answer: "6" },
+  { question: "What is the fastest land animal?", options: ["Lion", "Horse", "Cheetah", "Leopard"], answer: "Cheetah" },
+  { question: "In which year did World War II end?", options: ["1943", "1944", "1945", "1946"], answer: "1945" },
+  { question: "What language is primarily used for web styling?", options: ["HTML", "JavaScript", "Python", "CSS"], answer: "CSS" },
 ];
 
-// State
 let currentIndex = 0;
 let score = 0;
-let timerInterval = null;
+let timer = null;
 
-// Elements
-const startScreen      = document.getElementById("start-screen");
-const quizScreen       = document.getElementById("quiz-screen");
-const resultScreen     = document.getElementById("result-screen");
-const questionText     = document.getElementById("question-text");
-const optionsContainer = document.getElementById("options-container");
-const questionNumber   = document.getElementById("question-number");
-const scoreDisplay     = document.getElementById("score-display");
-const progressFill     = document.getElementById("progress-fill");
-const nextBtn          = document.getElementById("next-btn");
-const timerEl          = document.getElementById("timer");
-const timerCount       = document.getElementById("timer-count");
-const resultEmoji      = document.getElementById("result-emoji");
-const resultTitle      = document.getElementById("result-title");
-const resultScore      = document.getElementById("result-score");
-const resultMessage    = document.getElementById("result-message");
-
-// Show a screen, hide others
-function showScreen(screen) {
-  [startScreen, quizScreen, resultScreen].forEach(s => s.classList.add("hidden"));
-  screen.classList.remove("hidden");
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
 }
 
-// Timer
 function startTimer() {
   let timeLeft = 60;
+  const timerEl = document.getElementById('timer');
+  const timerCount = document.getElementById('timer-count');
   timerCount.textContent = timeLeft;
-  timerEl.classList.remove("timer-low");
+  timerEl.classList.remove('timer-low');
 
-  timerInterval = setInterval(() => {
+  timer = setInterval(() => {
     timeLeft--;
     timerCount.textContent = timeLeft;
-
-    if (timeLeft <= 10) timerEl.classList.add("timer-low");
-
+    if (timeLeft <= 10) timerEl.classList.add('timer-low');
     if (timeLeft <= 0) {
-      clearTimer();
-      timeExpired();
+      clearInterval(timer);
+      showCorrectAnswer();
+      setTimeout(nextQuestion, 1500);
     }
   }, 1000);
 }
 
-function clearTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-  timerEl.classList.remove("timer-low");
+function stopTimer() {
+  clearInterval(timer);
+  document.getElementById('timer').classList.remove('timer-low');
 }
 
-function timeExpired() {
-  // Reveal correct answer and auto-advance after 1.5s
-  const allOptions = optionsContainer.querySelectorAll(".option-btn");
-  const correct = questions[currentIndex].answer;
-  allOptions.forEach(btn => {
-    btn.disabled = true;
-    if (btn.textContent.includes(correct)) btn.classList.add("correct");
-  });
-  setTimeout(() => {
-    currentIndex++;
-    if (currentIndex < questions.length) loadQuestion();
-    else showResult();
-  }, 1500);
-}
-
-// Load current question
 function loadQuestion() {
   const q = questions[currentIndex];
 
-  questionNumber.textContent = `Question ${currentIndex + 1} / ${questions.length}`;
-  scoreDisplay.textContent   = `Score: ${score}`;
-  progressFill.style.width   = `${((currentIndex + 1) / questions.length) * 100}%`;
-  questionText.textContent   = q.question;
+  document.getElementById('question-number').textContent = `Question ${currentIndex + 1} / ${questions.length}`;
+  document.getElementById('score-display').textContent = `Score: ${score}`;
+  document.getElementById('progress-fill').style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+  document.getElementById('question-text').textContent = q.question;
+  document.getElementById('next-btn').classList.add('hidden');
+  document.getElementById('options-container').innerHTML = '';
 
-  optionsContainer.innerHTML = "";
-  nextBtn.classList.add("hidden");
-  clearTimer();
+  stopTimer();
   startTimer();
 
-  const labels = ["A", "B", "C", "D"];
-
-  q.options.forEach((option, i) => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.innerHTML = `<span class="label">${labels[i]}</span> ${option}`;
-    btn.addEventListener("click", () => selectAnswer(btn, option, q.answer));
-    optionsContainer.appendChild(btn);
+  q.options.forEach(option => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = option;
+    btn.onclick = () => selectAnswer(btn, option);
+    document.getElementById('options-container').appendChild(btn);
   });
 }
 
-// Handle answer selection
-function selectAnswer(selected, chosen, correct) {
-  const allOptions = optionsContainer.querySelectorAll(".option-btn");
+function selectAnswer(btn, chosen) {
+  stopTimer();
+  showCorrectAnswer();
 
-  allOptions.forEach(btn => {
-    btn.disabled = true;
-    if (btn.textContent.includes(correct)) btn.classList.add("correct");
-  });
-
-  if (chosen === correct) {
+  if (chosen === questions[currentIndex].answer) {
     score++;
-    scoreDisplay.textContent = `Score: ${score}`;
+    btn.classList.add('correct');
   } else {
-    selected.classList.add("wrong");
+    btn.classList.add('wrong');
   }
 
-  clearTimer();
-  nextBtn.classList.remove("hidden");
+  document.getElementById('score-display').textContent = `Score: ${score}`;
+  document.getElementById('next-btn').classList.remove('hidden');
 }
 
-// Show result screen
-function showResult() {
-  showScreen(resultScreen);
-
-  const total = questions.length;
-
-  resultScore.textContent = `You scored ${score} out of ${total}`;
-
-  if (score >= 9) {
-    resultEmoji.textContent   = "🏆";
-    resultTitle.textContent   = "Perfect Score!";
-    resultMessage.textContent = "Outstanding! You got every question right!";
-  } else if (score >= 7) {
-    resultEmoji.textContent   = "🎉";
-    resultTitle.textContent   = "Great Job!";
-    resultMessage.textContent = "You did really well. Keep it up!";
-  } else if (score >= 5) {
-    resultEmoji.textContent   = "😊";
-    resultTitle.textContent   = "Not Bad!";
-    resultMessage.textContent = "Good effort! A little more practice and you'll ace it.";
-  } else {
-    resultEmoji.textContent   = "📚";
-    resultTitle.textContent   = "Keep Studying!";
-    resultMessage.textContent = "Don't give up — try again and improve your score!";
-  }
+function showCorrectAnswer() {
+  const buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === questions[currentIndex].answer) btn.classList.add('correct');
+  });
 }
 
-// Reset and restart
-function restartQuiz() {
-  currentIndex = 0;
-  score        = 0;
-  clearTimer();
-  showScreen(quizScreen);
-  loadQuestion();
-}
-
-// Event Listeners
-document.getElementById("start-btn").addEventListener("click", () => {
-  showScreen(quizScreen);
-  loadQuestion();
-});
-
-nextBtn.addEventListener("click", () => {
+function nextQuestion() {
   currentIndex++;
   if (currentIndex < questions.length) {
     loadQuestion();
   } else {
     showResult();
   }
-});
+}
 
-document.getElementById("restart-btn").addEventListener("click", restartQuiz);
+function showResult() {
+  showScreen('result-screen');
+  document.getElementById('result-score').textContent = `You scored ${score} out of ${questions.length}`;
 
-document.getElementById("exit-btn").addEventListener("click", () => {
+  if (score >= 9) {
+    document.getElementById('result-emoji').textContent = '🏆';
+    document.getElementById('result-title').textContent = 'Perfect Score!';
+    document.getElementById('result-message').textContent = 'Outstanding! You got every question right!';
+  } else if (score >= 7) {
+    document.getElementById('result-emoji').textContent = '🎉';
+    document.getElementById('result-title').textContent = 'Great Job!';
+    document.getElementById('result-message').textContent = 'You did really well. Keep it up!';
+  } else if (score >= 5) {
+    document.getElementById('result-emoji').textContent = '😊';
+    document.getElementById('result-title').textContent = 'Not Bad!';
+    document.getElementById('result-message').textContent = 'Good effort! A little more practice and you\'ll ace it.';
+  } else {
+    document.getElementById('result-emoji').textContent = '📚';
+    document.getElementById('result-title').textContent = 'Keep Studying!';
+    document.getElementById('result-message').textContent = 'Don\'t give up — try again and improve your score!';
+  }
+}
+
+// Button events
+document.getElementById('start-btn').onclick = () => {
+  showScreen('quiz-screen');
+  loadQuestion();
+};
+
+document.getElementById('next-btn').onclick = nextQuestion;
+
+document.getElementById('restart-btn').onclick = () => {
   currentIndex = 0;
-  score        = 0;
-  clearTimer();
-  showScreen(startScreen);
-});
+  score = 0;
+  showScreen('quiz-screen');
+  loadQuestion();
+};
+
+document.getElementById('exit-btn').onclick = () => {
+  currentIndex = 0;
+  score = 0;
+  stopTimer();
+  showScreen('start-screen');
+};
